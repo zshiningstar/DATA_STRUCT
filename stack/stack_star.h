@@ -3,7 +3,6 @@
 
 //栈先进后出
 template <typename Type>
-
 class Stack
 {
 private:
@@ -11,11 +10,10 @@ private:
     int stacksize;          //栈大小
     Type *items;            //栈中元素
     int top;                //栈顶部索引
-    
 public:
     explicit Stack(int ss = SIZE);      //指定这个构造器只能被明确的调用/使用，不能作为类型转换操作符被隐含的使用
     Stack(const Stack& st);             //复制构造函数
-    ~Stack() { delete [] items; }
+    virtual ~Stack() { delete [] items; }
      /*****************************************
      *******一个容器应具备的基本条件：*********
      *****************************************/
