@@ -17,8 +17,8 @@ int main()
 //    std::cout << a << "\t" << b << std::endl;
 //    std::cout << test.size() << std::endl;    
     test.sort(0,test.size());
-    test.remove(0,test.size());
-    std::cout << test.size() << std::endl; 
+//    test.remove(0,test.size());
+    std::cout << test.find(3) << std::endl; 
     for(int i = 0;i<test.size();i++)
         std::cout << test[i] << std::endl;
 //    std::cout << "hello!" << std::endl;
