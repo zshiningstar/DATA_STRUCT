@@ -1,9 +1,15 @@
+/*************************************
+ 对已知向量进行操作
+*************************************/
+
 #ifndef _VECTOR_STAR_H
 #define _VECTOR_STAR_H
 
 #include <stdlib.h>
 #include<iostream>
-#define DEFAULT_CAPACITY 3
+#define DEFAULT_CAPACITY 10
+using namespace std;
+
 typedef int Rank;
 
 template <typename T>
@@ -18,24 +24,27 @@ protected:
     void copyfrom(T const* A, Rank lo, Rank hi);//复制数组区间A[lo,hi]
     void expend();//扩容
     void shrink();//装填因子过小时压缩
-    
     Rank max(Rank lo, Rank hi);//取最大
-    Rank partition(Rank lo, Rank hi);//轴点构造算法
-    
+    //Rank partition(Rank lo, Rank hi);//轴点构造算法
     bool bubble(Rank lo, Rank hi);//扫描交换
     void bubbleSort(Rank lo, Rank hi);//冒泡排序
-    void selectionSort(Rank lo, Rank hi);//选择排序
+    //void selectionSort(Rank lo, Rank hi);//选择排序
     void merge(Rank lo, Rank mi, Rank hi);//归并算法
     void mergeSort(Rank lo, Rank hi);//归并排序
     void quickSort(Rank lo, Rank hi);//快速排序
     void heapSort(Rank lo, Rank hi);//堆排序
     
     static Rank binSearch(T* A, T const& e, Rank lo, Rank hi);
-    
 public:
-    Vector(int c = DEFAULT_CAPACITY, int s = 0, T v = 0)//容量为C，大小为S，所有元素均为V
-    {   
-        _item = new T [_capacity];
+    Vector(int c = DEFAULT_CAPACITY, int s = 0, T v = 0)//容量为C，大小为S，所有元素均为V 形参具有默认值，则不传实参时，默认使用这个值，因此此类不需要定义默认构造函数;
+    {
+        if(c<s)
+        {
+            std::cerr << "The vector size must be less than capacity" << std::endl;
+            std::cerr << "The first parameter is the vector capacity" << std::endl;
+            return;
+        }
+        _item = new T [_capacity = c];
         for(_size=0;_size<s;_item[_size++]=v);
     }
     Vector(T const* A, Rank n)//数组整体复制
@@ -139,11 +148,11 @@ void Vector<T>::shrink()
 {
     if(_capacity < DEFAULT_CAPACITY << 1)//不致收缩到DEFAULT_CAPACITY以下
         return;
-    if(_size() << 2 > _capacity)//25%
+    if((_size << 2) > _capacity)//25%
         return;
     T* oldItem = _item;
     _item = new T [_capacity >>=1];//容量减半
-    for(int i=0;i<_size();i++)
+    for(int i=0;i<_size;i++)
         _item[i] = oldItem[i];
     delete [] oldItem;
 }
@@ -234,7 +243,7 @@ Rank Vector<T>::search(T const& e, Rank lo, Rank hi) const
 }
 
 template <typename T>
-static Rank Vector<T>::binSearch(T* A, T const& e, Rank lo, Rank hi)
+Rank Vector<T>::binSearch(T* A, T const& e, Rank lo, Rank hi)
 {
     while(lo < hi)
     {
@@ -246,7 +255,71 @@ static Rank Vector<T>::binSearch(T* A, T const& e, Rank lo, Rank hi)
 
 template <typename T>
 void Vector<T>::bubbleSort(Rank lo, Rank hi)
+{
+    while(!bubble(lo, hi--));
+}
 
+template <typename T>
+bool Vector<T>::bubble(Rank lo, Rank hi)//从小到大
+{
+    bool sorted = true;
+    while(++lo < hi)
+        if(_item[lo - 1] > _item[lo])
+        {
+            sorted = false;
+            swap(_item[lo-1], _item[lo]);
+        }
+    return sorted;
+}
 
+template <typename T>
+Rank Vector<T>::max(Rank lo, Rank hi)
+{
+    bubbleSort(lo, hi);
+    return hi;
+}
 
+template <typename T>
+void Vector<T>::mergeSort(Rank lo, Rank hi)
+{
+    if(lo < hi - 2)
+        return;
+    int mi = (lo + hi) / 2;
+    mergeSort(lo, mi);
+    mergeSort(mi, hi);
+    merge(lo, mi, hi);
+}
+
+template <typename T>
+void Vector<T>::merge(Rank lo, Rank mi, Rank hi)
+{
+    T* A = _item + lo;//A[0, hi-lo] _item是个指针，加上lo后指针移动到lo处，此时A的大小为hi-lo;_item则为_item[lo, hi]
+    int lb = mi - lo;//左子向量大小
+    T* B = new T [lb];//用来存放前子向量B[0,lb] = _item[0,mi]
+    for(Rank i = 0;i<lb;B[i]=A[i++]);//复制前子向量
+    int lc = hi - mi;
+    T* C = _item + mi;//后子向量C[mi, hi];
+    for(Rank i=0,j=0,k=0;(j<lb) || (k<lc);)
+    {
+        if((j<lb) && (!(k<lc) || (B[j] <= C[k])))
+            A[i++] = B[j++];
+        if((k<lc) && (!(j<lb) || (C[k] < B[j])))
+            A[i++] = C[k++];
+    }
+    delete [] B;
+}
+
+template <typename T>
+T& Vector<T>::operator[] (Rank r) const
+{
+    return _item[r];
+}
+
+template <typename T>
+void Vector<T>::sort(Rank lo, Rank hi)
+{
+    bubbleSort(lo, hi);
+}
+ 
+ 
 #endif
