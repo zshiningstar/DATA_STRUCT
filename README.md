@@ -9,3 +9,5 @@
     结束程序（到此位置）·
 * i <<= 1
     //i = i<<1  i等于i乘以2的1次方
+* swap():
+    位于C++头文件#include<iostream> using namespace std;
