@@ -32,3 +32,6 @@
     weak_ptr::lock();//创建被引用的对象的shared_ptr 
     auto_ptr::get();//返回指向被管理对象的指针，如果无被管理对象，则为nullptr
     **auto_ptr::release()**;//释放被管理对象的所有权
+
+* INT_MAX:
+    量INT_MAX和INT_MIN分别表示最大、最小整数，定义在头文件limits.h
