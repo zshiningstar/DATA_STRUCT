@@ -2,18 +2,7 @@
 #define _BINNODE_
 
 #include <cstdlib>
-#define IsRoot(x)           (!((x).parent))//(x).parent == NULL说明为根节点
-#define IsLChild(x)         (!IsRoot(x) && (&(x) == (x).parent->lc))//当前节点不是根节点并且当前节点地址和其父亲节点的左孩子一致
-#define IsRChild(x)         (!IsRoot(x) && (&(x) == (x).parent->rc))
-#define HasParent(x)        (!IsRoot(x))
-#define HasLChild(x)        ((x).lc)
-#define HasRChild(x)        ((x).rc)
-#define HasChild(x)         (HasLChild(x) || HasRChild(x))
-#define HasBothChild(x)     (HasLChild(x) && HasRChild(x))
-#define IsLeaf(x)           (!HasChild(x))//是否叶子节点
-#define sibling(p)          (IsLChild(*(p)) ? (p)->parent->rc : (p)->parent->lc)
-#define uncle(x)            (IsLChild(*((x)->parent)) ? (x)->parent->parent->rc : (x)->parent->parent->lc)
-#define FromParentTo(x)     (IsRoot(x) ? _root : (IsLChild(x) ? (x).parent->lc : (x).parent->rc))
+#include <memory>
 
 #define BinNodePosi(T) BinNode<T>*
 #define stature(p) ((p) ? (p)->height : -1)//节点高度(空树高度为-1)带参宏定义
@@ -78,6 +67,18 @@ BinNodePosi(T) BinNode<T>::insertAsRC (T const& e)
 }
 
 #define BinTreePosi(T) BinTree<T>*
+#define IsRoot(x)           (!((x).parent))//(x).parent == NULL说明为根节点
+#define IsLChild(x)         (!IsRoot(x) && (&(x) == (x).parent->lc))//当前节点不是根节点并且当前节点地址和其父亲节点的左孩子一致
+#define IsRChild(x)         (!IsRoot(x) && (&(x) == (x).parent->rc))
+#define HasParent(x)        (!IsRoot(x))
+#define HasLChild(x)        ((x).lc)
+#define HasRChild(x)        ((x).rc)
+#define HasChild(x)         (HasLChild(x) || HasRChild(x))
+#define HasBothChild(x)     (HasLChild(x) && HasRChild(x))
+#define IsLeaf(x)           (!HasChild(x))//是否叶子节点
+#define sibling(p)          (IsLChild(*(p)) ? (p)->parent->rc : (p)->parent->lc)
+#define uncle(x)            (IsLChild(*((x)->parent)) ? (x)->parent->parent->rc : (x)->parent->parent->lc)
+#define FromParentTo(x)     (IsRoot(x) ? _root : (IsLChild(x) ? (x).parent->lc : (x).parent->rc))
 
 template <typename T>
 class BinTree
@@ -114,30 +115,30 @@ public:
     
     int remove (BinNodePosi(T) x);
     BinNodePosi(T) secede(BinNodePosi(T) x);
-    template <typename VST>
-    void travLevel(VST& visit)
-    {
-        if(_root)
-            _root->travLevel(visit);//层次遍历
-    }
-    template <typename VST>
-    void travPre(VST& visit)
-    {
-        if(_root)
-            _root->travPre(visit);//先序遍历
-    }
-    template <typename VST>
-    void travIn(VST& visit)
-    {
-        if(_root)
-            _root->travIn(visit);
-    }
-    template <typename VST>
-    void travPost(VST& visit)
-    {
-        if(_root)
-            _root->travPost(visit);
-    }
+//    template <typename VST>
+//    void travLevel(VST& visit)
+//    {
+//        if(_root)
+//            _root->travLevel(visit);//层次遍历
+//    }
+//    template <typename VST>
+//    void travPre(VST& visit)
+//    {
+//        if(_root)
+//            _root->travPre(visit);//先序遍历
+//    }
+//    template <typename VST>
+//    void travIn(VST& visit)
+//    {
+//        if(_root)
+//            _root->travIn(visit);
+//    }
+//    template <typename VST>
+//    void travPost(VST& visit)
+//    {
+//        if(_root)
+//            _root->travPost(visit);
+//    }
     bool operator< (BinNode<T> const& t)
     {
         return _root && t._root && (_root == t._root);//
@@ -174,7 +175,7 @@ BinNodePosi(T) BinTree<T>::insertAsRoot(T const& e)
 template <typename T>
 BinNodePosi(T) BinTree<T>::insertAsLC(BinNodePosi(T) x, T const& e)
 {
-    _size++:
+    _size++;
     x->insertAsLC(e);
     updateHeightAbove(x);
     return x->lc;//e插入为x的左孩子
@@ -183,7 +184,7 @@ BinNodePosi(T) BinTree<T>::insertAsLC(BinNodePosi(T) x, T const& e)
 template <typename T>
 BinNodePosi(T) BinTree<T>::insertAsRC(BinNodePosi(T) x, T const& e)
 {
-    _size++:
+    _size++;
     x->insertAsRC(e);
     updateHeightAbove(x);
     return x->rc;//e插入为x的右孩子
