@@ -1,4 +1,4 @@
-#include"graph_star.h"
+#include"GraphMatrix_star.h"
 #include<iostream>
 using namespace std;
 

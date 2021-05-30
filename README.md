@@ -35,3 +35,8 @@
 
 * INT_MAX:
     量INT_MAX和INT_MIN分别表示最大、最小整数，定义在头文件limits.h
+* getline():
+    std::string temp; getline(cin,temp); 从键盘读入一个字符串并赋值给temp
+    
+    
+    
